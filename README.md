@@ -24,9 +24,6 @@ Each file in the combined output is separated by:
 ```
 <file
   path="file pathname in the repository"
-  title="File title"
-  type="markdown"
-  word_count="number"
 >
 ```
 
