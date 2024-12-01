@@ -17,7 +17,7 @@ npx repodocs https://github.com/user/repo
 This will:
 1. Clone the repository
 2. Find all .md files
-3. Combine them into a single file named `username__repository-name.txt`
+3. Combine them into a single file named `username__repository-name__latestSha__timestamp-YYYY-MM-DD.txt`
 4. Clean up temporary files
 
 Each file in the combined output is separated by:
