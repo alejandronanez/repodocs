@@ -1,6 +1,6 @@
 {
   "name": "repodocs",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "bin": {
     "repodocs": "./dist/index.js"
@@ -13,7 +13,9 @@
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.js",
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "rslib build",
     "check": "biome check --write",
