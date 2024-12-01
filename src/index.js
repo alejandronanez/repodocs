@@ -12,7 +12,18 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 async function cloneRepo(url) {
   const tmpDir = path.join(__dirname, 'tmp');
   await fs.mkdir(tmpDir, { recursive: true });
-  execSync(`git clone ${url} ${tmpDir}`, { stdio: 'inherit' });
+
+  const gitArgs = [
+    'clone',
+    '--depth',
+    '1', // Shallow clone - only latest commit
+    '--single-branch', // Don't fetch other branches
+    '--no-tags', // Skip downloading tags
+    url,
+    tmpDir,
+  ];
+
+  execSync(`git ${gitArgs.join(' ')}`, { stdio: 'inherit' });
   return tmpDir;
 }
 
