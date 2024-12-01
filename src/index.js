@@ -45,20 +45,31 @@ async function findMarkdownFiles(dir) {
 }
 
 async function processFiles(files, baseDir) {
-  let output = '';
+  let output = `<context>
+This document contains multiple markdown files from a repository. 
+Each file is wrapped with <file> tags and includes metadata about the file.
+The content of each file maintains its original markdown formatting.
+</context>\n\n`;
 
   for (const file of files) {
     const relativePath = path.relative(baseDir, file);
     const content = await fs.readFile(file, 'utf-8');
-    const title = content.split('\n')[0].replace(/^#\s*/, '');
+    const title = content.split('\n')[0].replace(/^#\s*/, '') || 'Untitled';
+    const wordCount = content.split(/\s+/).length;
 
-    output += `\n\n--- ${relativePath} - ${title || 'Untitled'} ---\n\n`;
-    output += content;
+    output += `<file
+  path="${relativePath}"
+  title="${title}"
+  type="markdown"
+  word_count="${wordCount}"
+>\n`;
+    output += content.trim();
+    output += '\n</file>\n\n';
   }
 
+  output += '<context_end>End of repository documentation</context_end>';
   return output;
 }
-
 async function cleanup(dir) {
   await fs.rm(dir, { recursive: true, force: true });
 }
