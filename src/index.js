@@ -74,6 +74,12 @@ async function cleanup(dir) {
   await fs.rm(dir, { recursive: true, force: true });
 }
 
+function getRepoInfo(url) {
+  const match = url.match(/github\.com\/([^\/]+)\/([^\/\.]+)/);
+  if (!match) throw new Error('Invalid GitHub repository URL');
+  return { username: match[1], repo: match[2] };
+}
+
 async function main() {
   const repoUrl = process.argv[2];
 
@@ -83,11 +89,12 @@ async function main() {
   }
 
   try {
+    const { username, repo } = getRepoInfo(repoUrl);
     const tmpDir = await cloneRepo(repoUrl);
     const mdFiles = await findMarkdownFiles(tmpDir);
     const output = await processFiles(mdFiles, tmpDir);
 
-    const outputFile = 'docs-combined.md';
+    const outputFile = `${username}__${repo}.txt`;
     await fs.writeFile(outputFile, output);
     console.log(`Combined documentation saved to ${outputFile}`);
 
