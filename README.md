@@ -1,23 +1,37 @@
-# Rslib Project
+# repodocs
 
-## Setup
+A simple CLI tool to combine all markdown files from a git repository into a single file. Useful for creating context files for LLMs.
 
-Install the dependencies:
-
-```bash
-pnpm install
-```
-
-## Get Started
-
-Build the library:
+## Installation
 
 ```bash
-pnpm build
+npm install -g repodocs
 ```
 
-Build the library in watch mode:
+## Usage
 
 ```bash
-pnpm dev
+npx repodocs https://github.com/user/repo
 ```
+
+This will:
+1. Clone the repository
+2. Find all .md files
+3. Combine them into a single file named `username__repository-name.txt`
+4. Clean up temporary files
+
+Each file in the combined output is separated by:
+```
+--- path/to/file.md - File Title ---
+```
+
+## Development
+
+1. Clone this repository
+2. Run `npm install`
+3. Make your changes
+4. Test locally with `node index.js`
+
+## License
+
+MIT
