@@ -44,11 +44,16 @@ async function findMarkdownFiles(dir) {
   return mdFiles;
 }
 
-async function processFiles(files, baseDir) {
+async function processFiles(files, baseDir, repoInfo) {
   let output = `<context>
-This document contains multiple markdown files from a repository. 
-Each file is wrapped with <file> tags and includes metadata about the file.
-The content of each file maintains its original markdown formatting.
+This document is a compilation of markdown files from a GitHub repository: ${repoInfo.username}/${repoInfo.repo}.
+Each <file> tag contains:
+- path: Relative file path in the repository
+- title: First heading or 'Untitled'
+- word_count: Number of words in the file
+- Original markdown content intact
+
+Purpose: Use this structured format to understand the repository's documentation structure and content relationships.
 </context>\n\n`;
 
   for (const file of files) {
@@ -89,12 +94,12 @@ async function main() {
   }
 
   try {
-    const { username, repo } = getRepoInfo(repoUrl);
+    const repoInfo = getRepoInfo(repoUrl);
     const tmpDir = await cloneRepo(repoUrl);
     const mdFiles = await findMarkdownFiles(tmpDir);
-    const output = await processFiles(mdFiles, tmpDir);
+    const output = await processFiles(mdFiles, tmpDir, repoInfo);
 
-    const outputFile = `${username}__${repo}.txt`;
+    const outputFile = `${repoInfo.username}__${repoInfo.repo}.txt`;
     await fs.writeFile(outputFile, output);
     console.log(`Combined documentation saved to ${outputFile}`);
 
