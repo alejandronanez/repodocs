@@ -103,6 +103,18 @@ function getRepoInfo(url) {
   if (!match) throw new Error('Invalid GitHub repository URL');
   return { username: match[1], repo: match[2] };
 }
+function getRepoMetadata(tmpDir) {
+  const sha = execSync('git rev-parse --short HEAD', { cwd: tmpDir })
+    .toString()
+    .trim();
+  const date = execSync('git show -s --format=%ci HEAD', { cwd: tmpDir })
+    .toString()
+    .trim()
+    .replace(/\s+.*$/, '') // Remove timezone
+    .replace(/[:-]/g, ''); // Remove separators
+
+  return { sha, date };
+}
 
 async function main() {
   const repoUrl = process.argv[2];
@@ -115,10 +127,11 @@ async function main() {
   try {
     const repoInfo = getRepoInfo(repoUrl);
     const tmpDir = await cloneRepo(repoUrl);
+    const metadata = getRepoMetadata(tmpDir);
     const mdFiles = await findMarkdownFiles(tmpDir);
     const output = await processFiles(mdFiles, tmpDir, repoInfo);
 
-    const outputFile = `${repoInfo.username}__${repoInfo.repo}.txt`;
+    const outputFile = `${repoInfo.username}__${repoInfo.repo}__${metadata.sha}__${metadata.date}.txt`;
     await fs.writeFile(outputFile, output);
     console.log(`Combined documentation saved to ${outputFile}`);
 
