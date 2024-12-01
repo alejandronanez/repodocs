@@ -22,7 +22,12 @@ This will:
 
 Each file in the combined output is separated by:
 ```
---- path/to/file.md - File Title ---
+<file
+  path="file pathname in the repository"
+  title="File title"
+  type="markdown"
+  word_count="number"
+>
 ```
 
 ## Development
