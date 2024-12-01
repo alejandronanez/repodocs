@@ -68,8 +68,6 @@ async function processFiles(files, baseDir, repoInfo) {
 This document is a compilation of markdown files from a GitHub repository: ${repoInfo.username}/${repoInfo.repo}.
 Each <file> tag contains:
 - path: Relative file path in the repository
-- title: First heading or 'Untitled'
-- word_count: Number of words in the file
 - Original markdown content intact
 
 Purpose: Use this structured format to understand the repository's documentation structure and content relationships.
@@ -78,15 +76,8 @@ Purpose: Use this structured format to understand the repository's documentation
   for (const file of files) {
     const relativePath = path.relative(baseDir, file);
     const content = await fs.readFile(file, 'utf-8');
-    const title = content.split('\n')[0].replace(/^#\s*/, '') || 'Untitled';
-    const wordCount = content.split(/\s+/).length;
 
-    output += `<file
-  path="${relativePath}"
-  title="${title}"
-  type="markdown"
-  word_count="${wordCount}"
->\n`;
+    output += `<file path="${relativePath}">\n`;
     output += content.trim();
     output += '\n</file>\n\n';
   }
