@@ -30,7 +30,7 @@ async function cloneRepo(url) {
 function shouldIgnoreFile(filePath) {
   const ignorePatterns = [
     /CHANGELOG\.md$/i,
-    /^examples\//,
+    /\/?examples(?:\/|$)/,
     /\.stories\.mdx?$/i,
     /node_modules/,
     /dist/,
