@@ -27,16 +27,35 @@ async function cloneRepo(url) {
   return tmpDir;
 }
 
+function shouldIgnoreFile(filePath) {
+  const ignorePatterns = [
+    /CHANGELOG\.md$/i,
+    /^examples\//,
+    /\.stories\.mdx?$/i,
+    /node_modules/,
+    /dist/,
+    /build/,
+    /\.git/,
+  ];
+
+  return ignorePatterns.some((pattern) => pattern.test(filePath));
+}
+
 async function findMarkdownFiles(dir) {
   const files = await fs.readdir(dir, { withFileTypes: true });
   let mdFiles = [];
 
   for (const file of files) {
     const fullPath = path.join(dir, file.name);
+    const relativePath = path.relative(dir, fullPath);
 
-    if (file.isDirectory() && !file.name.startsWith('.')) {
+    if (shouldIgnoreFile(relativePath)) {
+      continue;
+    }
+
+    if (file.isDirectory()) {
       mdFiles = mdFiles.concat(await findMarkdownFiles(fullPath));
-    } else if (file.name.endsWith('.md')) {
+    } else if (file.name.endsWith('.md') || file.name.endsWith('.mdx')) {
       mdFiles.push(fullPath);
     }
   }
