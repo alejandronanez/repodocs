@@ -37,11 +37,13 @@ jobs:
           git config user.email github-actions@github.com
       - name: Update version
         run: |
+          git fetch
+          git checkout main
           VERSION=${GITHUB_REF#refs/tags/}
           npm version ${VERSION} --no-git-tag-version
           git add package.json
           git commit -m "Update version to ${VERSION}"
-          git push
+          git push origin main
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
       - run: npm ci
